@@ -18,7 +18,7 @@ Certain characteristics of a Dockerfile must be included in order to compile the
 
 *FROM* - First, we must specify what base image we will be using. This can be compared to an OS, and actually can be a OS. Basically, the backbone the container will be running on. The OS that the container runs on can vary greatly, such as Python or Ubuntu, but is mostly important for any dependencies that the other attribute of the container will run on. To pick a base image, visit [Docker Hub](hub.docker.com) and search for which one you would like to use. For example, we could use Python like so:
 
-```docker
+```Docker
 FROM python:<Version>
 ```
 
@@ -26,13 +26,13 @@ We can specify a version here if needed, or use "python:latest" to use the lates
 
 *RUN* - Next, a crucial part that we must have is some command that is going to run when we make this. Conveniently, this is the *RUN* command. This could be anything from making a directory inside the container to installing Ubuntu applications such as Vim. If we are using an OS, then it must be formatted in the that OS's way, for example with a base image as Ubuntu:
 
-```docker
+```Docker
 RUN apt-get install vim
 ```
 
 *Expose* - Running this on a port. In this class previously we have used ports like 8080, 4040 and so on in order to run the docker container. Be careful not to choose ports that would override any ports already being run.
 
-```docker
+```Docker
 EXPOSE 2000
 ```
 
@@ -44,18 +44,18 @@ EXPOSE 2000
 
 *USER* - To add a user we would run the following
 
-```docker
+```Docker
 USER <username>
 ```
 *ADD* - An option here would be to copy over local/remote files into the container. This would be here when the container is created, if necessary. An example being a Python virtual environment, listing all packages and versions. 
 
-```docker
+```Docker
 ADD <src> <dest>
 ```
 
 ### Dockerfile in use
 
-As an example, this [Dockerfile](/Dockerfile) will give a simple example of a file that can be made into an image, then into a container. This example is so simple that it might seem unhelpful, but it contains the basic commands needed to build the image and make it into a container. 
+As an example, this [Dockerfile](/Dockerfile) will give a simple example of a file that can be made into an image, then into a container. This example is so simple that it might seem unhelpful, but it contains the basic commands needed to build the image and make it into a container. I worked off of [this example](https://www.codingforentrepreneurs.com/blog/simple-docker) and condensed it to help with understanding.
 
 This example of a Dockerfile contains the important parts to make the image and container run. To summarise:
 
