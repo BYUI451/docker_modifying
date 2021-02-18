@@ -85,7 +85,12 @@ Here is my output:
 > C:\git\docker_modifying> docker run -it example_container
 > hello world
 
-Running this container right here is not very exciting as it only contains one command, but if this was an application it would run until we stop it. To help with understanding, here is how it looks in the Docker Desktop application.
+Running this container right here is not very exciting as it only contains one command, but if this was an application it would run until we stop it. To help with understanding, here is how it looks in the Docker Desktop application. Changing and making edits to the Docker container is as easy as changing the Dockerfile and rerunning the previous lines. For example, we could quickly change the Python version by changing the first line to:
+
+```Docker
+RUN python:latest
+```
+With this one adjustment and rerunning the docker code we have made a new container that is exactly the same as the last one but updated to the new requirements.
 
 ![docker_desktop](example_container_output.png)
 
