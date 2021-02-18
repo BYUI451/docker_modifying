@@ -89,4 +89,52 @@ Running this container right here is not very exciting as it only contains one c
 
 
 
-## Modifying
+## Persisting data
+
+when we create a new container using an image file the data in the container will be the same for all containers, if we have some data that we want to persist beyond the life of one container we need to use Docker Volume. the bulk of this example was gained from https://docs.docker.com/storage/volumes/
+
+```bash
+$ docker run --rm --volumes-from example_container -v $(pwd):/backup ubuntu tar cvf /backup/backup.tar /dbdata
+```
+This command is doing multiple things at once so we will breake it down
+
+1st Launch a new container and mount the volume from the example_container container
+2nd Mount a local host directory as /backup
+3rd Pass a command that tars the contents of the dbdata volume to a backup.tar file inside our /backup directory.
+
+We then can run 
+
+```bash
+$ docker run -v /dbdata --name example_container2 ubuntu /bin/bash
+```
+this will create a new container named example_container2, the data will be saved in a tar format which is not usable so we need to untar the tar file with
+
+```bash
+$ docker run --rm --volumes-from example_container2 -v $(pwd):/backup ubuntu bash -c "cd /dbdata && tar xvf /backup/backup.tar --strip 1"
+```
+
+When creating multiple volume files we can keep track of all of the volumes using
+```bash
+docker volume ls
+```
+
+
+One benefit as stated above is that docker volume files persist after the original container is deleted. One concern is that we need to manually remove docker volumes to free up space from the local machine.
+
+1st we can get rid of the individual docker volume using
+
+```bash
+$ docker volume rm example_container
+```
+
+2nd there are two different types of volume files named and anonymouse, if we want to get rid of all the anonymous volumes we can use
+
+```bash
+docker run --rm -v /example_container
+```
+
+3rd to get rid of all volumes we can use
+
+```bash
+$ docker volume prune
+```
