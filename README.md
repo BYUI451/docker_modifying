@@ -99,7 +99,9 @@ $ docker run --rm --volumes-from example_container -v $(pwd):/backup ubuntu tar 
 This command is doing multiple things at once so we will breake it down
 
 1st Launch a new container and mount the volume from the example_container container
+
 2nd Mount a local host directory as /backup
+
 3rd Pass a command that tars the contents of the dbdata volume to a backup.tar file inside our /backup directory.
 
 We then can run 
