@@ -2,19 +2,21 @@
 
 Modifying and adding elements to a container.
 
-## Basics
+## Modifying
 
-### The Dockerfile
+In order to modify a Docker container, we have to get to the source of the container. Containers are built from images, but images are built from a Dockerfile. The best way to modify a container is by modifying the Dockerfile that built the container. As will be described later, when we modify the Dockerfile and turn it into a container, we have successfully modified the container. In this report, we will dive into what a Dockerfile is, how to build one, a quick example and persisting data.
+
+## The Dockerfile
 
 The Dockerfile is the starting place for any custom image or container. Within this file, anything we need from an image or container can be specified. There are hundreds of thousands of ways to specify the makeup of a Docker container, and it is very customizable. In this way, a container is much like Legos. There are an infinite number of ways that Legos can go together, combining some pieces with others or omitting pieces. This is how a Docker container is as well. I think that this analogy will better explain it.
 
 > A Dockerfile is to a container what a homemade instruction manual is to a Lego set.
 
-This analogy is a way to look at a Dockerfile. A store bought Lego set comes with instuctions on how to configure that certain set to look like what is on the box. That's a Docker Hub supported image, someone has already done the work for us. But when we build something really cool out of the millions of possible Lego configurations, we could make ourselves an instruction manual to be able to make it again. A Dockerfile can be used over and over again to produce an image, which yields the final result of a container.
+This analogy is a way to look at a Dockerfile. A store bought Lego set comes with instructions on how to configure that certain set to look like what is on the box. That's a Docker Hub supported image, someone has already done the work for us. But when we build something really cool out of the millions of possible Lego configurations, we could make ourselves an instruction manual to be able to make it again. A Dockerfile can be used over and over again to produce an image, which yields the final result of a container.
 
-### Anatomy of a Dockerfile
+## Anatomy of a Dockerfile
 
-Certain characteristics of a Dockerfile must be included in order to compile the image into a container. The order will be shown down below, but let's dive into what some of these characteristics are. This will be a surface level overview. For a more in depth look into what some of these charactersitics are read [this file here](https://gist.github.com/adamveld12/4815792fadf119ef41bd). 
+Certain characteristics of a Dockerfile must be included in order to compile the image into a container. The order will be shown down below, but let's dive into what some of these characteristics are. This will be a surface level overview. For a more in depth look into what some of these characteristics are read [this file here](https://gist.github.com/adamveld12/4815792fadf119ef41bd). 
 
 *FROM* - First, we must specify what base image we will be using. This can be compared to an OS, and actually can be a OS. Basically, the backbone the container will be running on. The OS that the container runs on can vary greatly, such as Python or Ubuntu, but is mostly important for any dependencies that the other attribute of the container will run on. To pick a base image, visit [Docker Hub](hub.docker.com) and search for which one you would like to use. For example, we could use Python like so:
 
@@ -38,7 +40,7 @@ EXPOSE 2000
 
 *CMD* - If we need anything run right away upon starting the image or container, then this is the command to do it. 
 
-##### Useful Extras
+### Useful Extras
 
 *WORKDIR* - This is what sets the working directory inside of our container if we want/need to.
 
@@ -53,11 +55,11 @@ USER <username>
 ADD <src> <dest>
 ```
 
-### Dockerfile in use
+## Dockerfile in use
 
 As an example, this [Dockerfile](/Dockerfile) will give a simple example of a file that can be made into an image, then into a container. This example is so simple that it might seem unhelpful, but it contains the basic commands needed to build the image and make it into a container. I worked off of [this example](https://www.codingforentrepreneurs.com/blog/simple-docker) and condensed it to help with understanding.
 
-This example of a Dockerfile contains the important parts to make the image and container run. To summarise:
+This example of a Dockerfile contains the important parts to make the image and container run. To summarize:
 
 ```docker
 FROM     # a base image
@@ -91,25 +93,23 @@ Running this container right here is not very exciting as it only contains one c
 
 ## Persisting data
 
-when we create a new container using an image file the data in the container will be the same for all containers, if we have some data that we want to persist beyond the life of one container we need to use Docker Volume. the bulk of this example was gained from https://docs.docker.com/storage/volumes/
+When we create a new container using an image file the data in the container will be the same for all containers, if we have some data that we want to persist beyond the life of one container we need to use Docker Volume. The bulk of this example was gained from https://docs.docker.com/storage/volumes/
 
 ```bash
 $ docker run --rm --volumes-from example_container -v $(pwd):/backup ubuntu tar cvf /backup/backup.tar /dbdata
 ```
-This command is doing multiple things at once so we will breake it down
+This command is doing multiple things at once so we will break it down
 
-1st Launch a new container and mount the volume from the example_container container
-
-2nd Mount a local host directory as /backup
-
-3rd Pass a command that tars the contents of the dbdata volume to a backup.tar file inside our /backup directory.
+- 1st: Launch a new container and mount the volume from the example_container container
+- 2nd: Mount a local host directory as /backup
+- 3rd: Pass a command that tars the contents of the dbdata volume to a backup.tar file inside our /backup directory.
 
 We then can run 
 
 ```bash
 $ docker run -v /dbdata --name example_container2 ubuntu /bin/bash
 ```
-this will create a new container named example_container2, the data will be saved in a tar format which is not usable so we need to untar the tar file with
+This will create a new container named example_container2, the data will be saved in a tar format which is not usable so we need to untar the tar file with
 
 ```bash
 $ docker run --rm --volumes-from example_container2 -v $(pwd):/backup ubuntu bash -c "cd /dbdata && tar xvf /backup/backup.tar --strip 1"
@@ -123,20 +123,22 @@ docker volume ls
 
 One benefit as stated above is that docker volume files persist after the original container is deleted. One concern is that we need to manually remove docker volumes to free up space from the local machine.
 
-1st we can get rid of the individual docker volume using
+1st: We can get rid of the individual docker volume using
 
 ```bash
 $ docker volume rm example_container
 ```
 
-2nd there are two different types of volume files named and anonymouse, if we want to get rid of all the anonymous volumes we can use
+2nd: There are two different types of volume files named and anonymous, if we want to get rid of all the anonymous volumes we can use
 
 ```bash
 docker run --rm -v /example_container
 ```
 
-3rd to get rid of all volumes we can use
+3rd: To get rid of all volumes we can use
 
 ```bash
 $ docker volume prune
 ```
+
+
