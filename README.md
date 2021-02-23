@@ -94,7 +94,26 @@ With this one adjustment and rerunning the docker code we have made a new contai
 
 ![docker_desktop](example_container_output.png)
 
+### Reverse Engineering an Existing Docker Image
 
+It is possible to reverse engineer a Dockerfile from an existing image. There are quite a few ways to do it form [Docker Hub](https://hub.docker.com/r/laniksj/dfimage), but none that I could get to work. 
+
+The first step would be to pull the image:
+```Docker
+docker pull alpine/dfimage
+```
+
+This should enable us to create an alias for the command to run this container that reverse engineers to the Dockerfile.
+
+```Docker
+docker run -v /var/run/docker.sock:/var/run/docker.sock dfimage example_container
+```
+
+However, whenever I try to run this I get the following error:
+
+> docker: Error response from daemon: pull access denied for dfimage, repository does not exist or may require 'docker login': denied: requested access to the resource is denied.
+
+So if someone knows how to fix this error, let me know. I will continue to try to get this to work.
 
 ## Persisting data
 
