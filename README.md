@@ -26,10 +26,10 @@ FROM python:<Version>
 
 We can specify a version here if needed, or use "python:latest" to use the latest stable version available on Docker Hub. 
 
-*RUN* - Next, a crucial part that we must have is some command that is going to run when we make this. Conveniently, this is the *RUN* command. This could be anything from making a directory inside the container to installing Ubuntu applications such as Vim. If we are using an OS, then it must be formatted in the that OS's way, for example with a base image as Ubuntu:
+*RUN* - Next, a crucial part that we must have is some command that is going to run when we make this. Conveniently, this is the *RUN* command. This could be anything from making a directory inside the container to installing Python packages such as pip. If we are using an OS, then it must be formatted in the that OS's way, for example with a base image as Python:
 
 ```Docker
-RUN apt-get install vim
+RUN apt-get python3-pip
 ```
 
 *Expose* - Running this on a port. In this class previously we have used ports like 8080, 4040 and so on in order to run the docker container. Be careful not to choose ports that would override any ports already being run.
@@ -82,7 +82,6 @@ docker run -it example_container
 
 Here is my output:
 
-> C:\git\docker_modifying> docker run -it example_container
 > hello world
 
 Running this container right here is not very exciting as it only contains one command, but if this was an application it would run until we stop it. To help with understanding, here is how it looks in the Docker Desktop application. Changing and making edits to the Docker container is as easy as changing the Dockerfile and rerunning the previous lines. For example, we could quickly change the Python version by changing the first line to:
@@ -100,13 +99,13 @@ It is possible to reverse engineer a Dockerfile from an existing image. There ar
 
 The first step would be to pull the image:
 ```Docker
-docker pull alpine/dfimage
+docker pull laniksj/dfimage
 ```
 
 This should enable us to create an alias for the command to run this container that reverse engineers to the Dockerfile.
 
 ```Docker
-docker run -v /var/run/docker.sock:/var/run/docker.sock dfimage example_container
+docker run -v /var/run/docker.sock:/var/run/docker.sock laniksj/dfimage example_container
 ```
 
 However, whenever I try to run this I get the following error:
@@ -114,6 +113,11 @@ However, whenever I try to run this I get the following error:
 > docker: Error response from daemon: pull access denied for dfimage, repository does not exist or may require 'docker login': denied: requested access to the resource is denied.
 
 So if someone knows how to fix this error, let me know. I will continue to try to get this to work.
+
+Look into potential secrets. 
+
+docker run dfimage python
+**Explain the reverse engineering and overwriting / new container.**
 
 ## Persisting data
 
